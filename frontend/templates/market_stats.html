@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Market Stats · Udyog{% endblock %}
+
+{% block content %}
+
+<div class="hero" style="padding-top: 20px;">
+    <h1 style="font-size: 36px;">📊 <span>Live Market</span> Stats</h1>
+    <p>Real-time job market data</p>
+</div>
+
+<div class="stats-row">
+    <div class="stat-box">
+        <div class="num" style="color: var(--teal);">{{ stats.get('remote_jobs', 0)|int }}</div>
+        <div class="lbl">Global Remote Jobs</div>
+    </div>
+    <div class="stat-box">
+        <div class="num" style="color: var(--coral);">{{ stats.get('local_jobs', 0) }}</div>
+        <div class="lbl">Udyog Local Jobs</div>
+    </div>
+    <div class="stat-box">
+        <div class="num" style="color: var(--purple);">{{ stats.get('total_companies', 0) }}</div>
+        <div class="lbl">Verified Companies</div>
+    </div>
+    <div class="stat-box">
+        <div class="num" style="color: var(--gold);">24/7</div>
+        <div class="lbl">Live Updates</div>
+    </div>
+</div>
+
+<div style="text-align: center; margin-top: 30px;">
+    <a href="/live-jobs" class="btn btn-coral" style="padding: 16px 40px; font-size: 18px;">🌐 View Live Jobs</a>
+</div>
+
+{% endblock %}

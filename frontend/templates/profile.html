@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+{% block title %}Profile - {{ user.display_name }}{% endblock %}
+
+{% block content %}
+<div style="max-width: 900px; margin: 0 auto;">
+
+    <!-- Profile Header -->
+    <div class="job-card" style="border-left: 4px solid #3498db; text-align: center;">
+        <div style="font-size: 60px;">👤</div>
+        <h2>{{ profile.first_name or profile.company_name or 'Admin' }}</h2>
+        {% if user.user_type == 'job_seeker' %}
+            <p style="color: #7f8c8d;">{{ profile.headline or 'No headline set' }}</p>
+        {% endif %}
+        <p>📧 {{ user.email }} | 📱 {{ user.phone or 'N/A' }}</p>
+        <p>📍 {{ user.city }}, {{ user.state }}</p>
+    </div>
+
+    {% if user.user_type == 'job_seeker' %}
+    
+    <!-- Skills -->
+    <div class="job-card">
+        <h3>💪 Skills</h3>
+        <div class="details">
+            {% if profile.skills_list %}
+                {% for skill in profile.skills_list.split(', ') %}
+                <span class="badge" style="background: #3498db; color: white;">{{ skill }}</span>
+                {% endfor %}
+            {% else %}
+                <p>No skills added yet.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Experience -->
+    <div class="job-card">
+        <h3>💼 Work Experience</h3>
+        {% if profile.experience %}
+            {% for exp in profile.experience %}
+            <div style="border-left: 3px solid #3498db; padding: 10px; margin: 10px 0; background: #f8f9fa;">
+                <strong>{{ exp.job_title }}</strong> at {{ exp.company_name }}
+                <br>
+                <small style="color: #7f8c8d;">
+                    📅 {{ exp.start_date.strftime('%b %Y') if exp.start_date else 'N/A' }} - 
+                    {% if exp.is_current %}Present{% else %}{{ exp.end_date.strftime('%b %Y') if exp.end_date else 'N/A' }}{% endif %}
+                </small>
+                {% if exp.description %}
+                <p style="margin-top: 5px;">{{ exp.description }}</p>
+                {% endif %}
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No experience added yet.</p>
+        {% endif %}
+    </div>
+
+    <!-- Education -->
+    <div class="job-card">
+        <h3>🎓 Education</h3>
+        {% if profile.education %}
+            {% for edu in profile.education %}
+            <div style="border-left: 3px solid #27ae60; padding: 10px; margin: 10px 0; background: #f8f9fa;">
+                <strong>{{ edu.degree }}</strong> in {{ edu.field_of_study }}
+                <br>
+                🏫 {{ edu.institution }}
+                <br>
+                <small style="color: #7f8c8d;">📅 {{ edu.start_year }} - {{ edu.end_year }}</small>
+                {% if edu.grade_percentage %}
+                <br><small>📊 {{ edu.grade_percentage }}%</small>
+                {% endif %}
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No education added yet.</p>
+        {% endif %}
+    </div>
+
+    <!-- Applications -->
+    <div class="job-card">
+        <h3>📋 My Applications</h3>
+        {% if profile.applications %}
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr style="background: #2c3e50; color: white;">
+                <th style="padding: 10px;">Job</th>
+                <th>Company</th>
+                <th>Status</th>
+                <th>Date</th>
+            </tr>
+            {% for app in profile.applications %}
+            <tr style="border-bottom: 1px solid #ddd;">
+                <td style="padding: 10px;">{{ app.job_title }}</td>
+                <td>{{ app.company_name }}</td>
+                <td>
+                    <span class="badge" style="background: 
+                        {% if app.status == 'Applied' %}#3498db
+                        {% elif app.status == 'Shortlisted' %}#f39c12
+                        {% elif app.status == 'Offered' %}#27ae60
+                        {% elif app.status == 'Rejected' %}#e74c3c
+                        {% else %}#95a5a6{% endif %}; color: white;">
+                        {{ app.status }}
+                    </span>
+                </td>
+                <td>{{ app.applied_date.strftime('%d %b %Y') if app.applied_date else 'N/A' }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+            <p>No applications yet. <a href="/">Browse jobs</a></p>
+        {% endif %}
+    </div>
+
+    {% elif user.user_type == 'employer' %}
+    
+    <!-- Company Info -->
+    <div class="job-card">
+        <h3>🏢 Company Information</h3>
+        <p><strong>Industry:</strong> {{ profile.industry or 'N/A' }}</p>
+        <p><strong>Size:</strong> {{ profile.company_size or 'N/A' }}</p>
+        <p><strong>Website:</strong> <a href="{{ profile.company_website }}">{{ profile.company_website or 'N/A' }}</a></p>
+        <p><strong>Headquarters:</strong> {{ profile.headquarters_city or 'N/A' }}</p>
+        <p><strong>Founded:</strong> {{ profile.founded_year or 'N/A' }}</p>
+        {% if profile.company_description %}
+        <p>{{ profile.company_description }}</p>
+        {% endif %}
+    </div>
+
+    <!-- Jobs Posted -->
+    <div class="job-card">
+        <h3>📋 Jobs Posted</h3>
+        {% if profile.jobs %}
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr style="background: #2c3e50; color: white;">
+                <th style="padding: 10px;">Title</th>
+                <th>Location</th>
+                <th>Applicants</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+            {% for job in profile.jobs %}
+            <tr style="border-bottom: 1px solid #ddd;">
+                <td style="padding: 10px;">{{ job.title }}</td>
+                <td>{{ job.location_city }}</td>
+                <td style="text-align: center;">{{ job.application_count }}</td>
+                <td>{{ job.status }}</td>
+                <td>
+                    <a href="/applications/{{ job.job_id }}" style="color: #3498db;">View Applicants</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+            <p>No jobs posted yet.</p>
+        {% endif %}
+    </div>
+
+    {% endif %}
+
+    <br>
+    <a href="/" class="btn">🏠 Back to Home</a>
+</div>
+{% endblock %}

@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+{% block title %}Filter Jobs · Udyog{% endblock %}
+
+{% block content %}
+
+<div class="hero" style="padding-top: 10px;">
+    <h1 style="font-size: 32px;">🎯 <span>Find Your</span> Perfect Job</h1>
+    <p>Use filters to narrow down your search</p>
+</div>
+
+<div style="display: flex; gap: 24px; flex-wrap: wrap;">
+    
+    <!-- FILTER SIDEBAR -->
+    <div style="flex: 0 0 280px;">
+        <div class="section-card" style="position: sticky; top: 90px;">
+            <h3 style="margin-bottom: 20px;">🔍 Filters</h3>
+            
+            <form action="/filter" method="GET">
+                
+                <!-- Keyword -->
+                <div class="input-group">
+                    <label>Keyword</label>
+                    <input type="text" name="keyword" placeholder="Job title or skill..." 
+                           value="{{ filters.keyword }}" class="form-control">
+                </div>
+                
+                <!-- Location -->
+                <div class="input-group">
+                    <label>📍 Location</label>
+                    <select name="location" class="form-control">
+                        <option value="">All Locations</option>
+                        {% for loc in locations %}
+                        <option value="{{ loc }}" {% if filters.location == loc %}selected{% endif %}>
+                            {{ loc }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <!-- Job Type -->
+                <div class="input-group">
+                    <label>💼 Job Type</label>
+                    <select name="job_type" class="form-control">
+                        <option value="">All Types</option>
+                        <option value="Full-time" {% if filters.job_type == 'Full-time' %}selected{% endif %}>Full-time</option>
+                        <option value="Part-time" {% if filters.job_type == 'Part-time' %}selected{% endif %}>Part-time</option>
+                        <option value="Contract" {% if filters.job_type == 'Contract' %}selected{% endif %}>Contract</option>
+                        <option value="Freelance" {% if filters.job_type == 'Freelance' %}selected{% endif %}>Freelance</option>
+                        <option value="Internship" {% if filters.job_type == 'Internship' %}selected{% endif %}>Internship</option>
+                        <option value="Remote" {% if filters.job_type == 'Remote' %}selected{% endif %}>Remote</option>
+                    </select>
+                </div>
+                
+                <!-- Experience Level -->
+                <div class="input-group">
+                    <label>📊 Experience</label>
+                    <select name="experience" class="form-control">
+                        <option value="">All Levels</option>
+                        <option value="Entry Level" {% if filters.experience == 'Entry Level' %}selected{% endif %}>Entry Level</option>
+                        <option value="Mid Level" {% if filters.experience == 'Mid Level' %}selected{% endif %}>Mid Level</option>
+                        <option value="Senior Level" {% if filters.experience == 'Senior Level' %}selected{% endif %}>Senior Level</option>
+                        <option value="Manager" {% if filters.experience == 'Manager' %}selected{% endif %}>Manager</option>
+                        <option value="Director" {% if filters.experience == 'Director' %}selected{% endif %}>Director</option>
+                    </select>
+                </div>
+                
+                <!-- Salary Range -->
+                <div class="input-group">
+                    <label>💰 Min Salary (₹)</label>
+                    <select name="min_salary" class="form-control">
+                        <option value="">Any</option>
+                        <option value="500000" {% if filters.min_salary == '500000' %}selected{% endif %}>₹5 LPA+</option>
+                        <option value="1000000" {% if filters.min_salary == '1000000' %}selected{% endif %}>₹10 LPA+</option>
+                        <option value="1500000" {% if filters.min_salary == '1500000' %}selected{% endif %}>₹15 LPA+</option>
+                        <option value="2000000" {% if filters.min_salary == '2000000' %}selected{% endif %}>₹20 LPA+</option>
+                        <option value="3000000" {% if filters.min_salary == '3000000' %}selected{% endif %}>₹30 LPA+</option>
+                    </select>
+                </div>
+                
+                <!-- Sort By -->
+                <div class="input-group">
+                    <label>📋 Sort By</label>
+                    <select name="sort_by" class="form-control">
+                        <option value="newest" {% if filters.sort_by == 'newest' %}selected{% endif %}>Newest First</option>
+                        <option value="oldest" {% if filters.sort_by == 'oldest' %}selected{% endif %}>Oldest First</option>
+                        <option value="salary_high" {% if filters.sort_by == 'salary_high' %}selected{% endif %}>Salary: High to Low</option>
+                        <option value="salary_low" {% if filters.sort_by == 'salary_low' %}selected{% endif %}>Salary: Low to High</option>
+                    </select>
+                </div>
+                
+                <!-- Buttons -->
+                <button type="submit" class="btn btn-coral" style="width: 100%; margin-bottom: 8px;">
+                    🔍 Apply Filters
+                </button>
+                <a href="/filter" class="btn btn-outline" style="width: 100%; text-align: center;">
+                    🔄 Clear All
+                </a>
+            </form>
+        </div>
+    </div>
+    
+    <!-- RESULTS -->
+    <div style="flex: 1; min-width: 300px;">
+        
+        <!-- Results Header -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h3 style="margin: 0;">📋 {{ total }} Jobs Found</h3>
+        </div>
+        
+        <!-- Active Filters -->
+        {% if filters.location or filters.job_type or filters.experience or filters.keyword %}
+        <div class="tags" style="margin-bottom: 16px;">
+            {% if filters.keyword %}
+            <span class="tag tag-location">🔍 {{ filters.keyword }}</span>
+            {% endif %}
+            {% if filters.location %}
+            <span class="tag tag-location">📍 {{ filters.location }}</span>
+            {% endif %}
+            {% if filters.job_type %}
+            <span class="tag tag-type">💼 {{ filters.job_type }}</span>
+            {% endif %}
+            {% if filters.experience %}
+            <span class="tag tag-level">📊 {{ filters.experience }}</span>
+            {% endif %}
+        </div>
+        {% endif %}
+        
+        <!-- Job Cards -->
+        {% if jobs %}
+            {% for job in jobs %}
+            <a href="/job/{{ job.job_id }}" style="text-decoration: none; color: inherit;">
+                <div class="job-card">
+                    <div class="company-logo">{{ job.company_name[0] }}</div>
+                    <div class="job-info">
+                        <h3>{{ job.title }}</h3>
+                        <div class="company-name">{{ job.company_name }} · {{ job.location_city }}</div>
+                        <div class="tags">
+                            <span class="tag tag-location">📍 {{ job.location_city or 'Remote' }}</span>
+                            <span class="tag tag-type">💼 {{ job.job_type }}</span>
+                            {% if job.min_salary %}
+                            <span class="tag tag-salary">💰 ₹{{ "{:,.0f}".format(job.min_salary) }} - ₹{{ "{:,.0f}".format(job.max_salary) }}</span>
+                            {% endif %}
+                            <span class="tag tag-level">📊 {{ job.experience_level }}</span>
+                        </div>
+                    </div>
+                    <div class="arrow">→</div>
+                </div>
+            </a>
+            {% endfor %}
+        {% else %}
+            <div style="text-align: center; padding: 60px; background: white; border-radius: 16px;">
+                <p style="font-size: 18px; color: #64748b;">😔 No jobs match your filters</p>
+                <a href="/filter" class="btn btn-outline" style="margin-top: 12px;">Clear Filters</a>
+            </div>
+        {% endif %}
+        
+    </div>
+</div>
+
+{% endblock %}

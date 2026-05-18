@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Search Jobs{% endblock %}
+
+{% block content %}
+<div class="search-bar">
+    <form action="/search" method="GET">
+        <input type="text" name="q" placeholder="Search jobs..." value="{{ query }}">
+        <button type="submit">🔍 Search</button>
+    </form>
+</div>
+
+{% if query %}
+    <h2>🔍 Search Results for "{{ query }}" ({{ jobs|length }} found)</h2>
+{% else %}
+    <h2>📋 All Jobs</h2>
+{% endif %}
+<br>
+
+{% for job in jobs %}
+<div class="job-card">
+    <h3><a href="/job/{{ job.job_id }}" style="color: #2c3e50; text-decoration: none;">{{ job.title }}</a></h3>
+    <div class="company">🏢 {{ job.company_name }} | 📍 {{ job.location_city }}</div>
+    <div class="details">
+        <span class="badge">💼 {{ job.job_type }}</span>
+        {% if job.min_salary %}
+        <span class="badge salary">💰 ₹{{ "{:,.0f}".format(job.min_salary) }} - ₹{{ "{:,.0f}".format(job.max_salary) }}</span>
+        {% endif %}
+        {% if job.relevance %}
+        <span class="badge">⭐ Relevance: {{ "%.1f"|format(job.relevance) }}</span>
+        {% endif %}
+    </div>
+</div>
+{% else %}
+    <p>No jobs found matching your search.</p>
+{% endfor %}
+{% endblock %}

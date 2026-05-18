@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Join Udyog · Create Account{% endblock %}
+
+{% block content %}
+
+<div class="form-card" style="max-width: 560px;">
+    <h2>Join Udyog 🎉</h2>
+    <p class="subtitle">Create your free account in seconds</p>
+    
+    <form action="/register" method="POST">
+        <div class="input-group">
+            <label>I want to...</label>
+            <div style="display: flex; gap: 10px;">
+                <label style="flex:1; padding:12px; border:2px solid var(--gray-200); border-radius:var(--radius); text-align:center; cursor:pointer;">
+                    <input type="radio" name="user_type" value="job_seeker" checked> 👤 Find Jobs
+                </label>
+                <label style="flex:1; padding:12px; border:2px solid var(--gray-200); border-radius:var(--radius); text-align:center; cursor:pointer;">
+                    <input type="radio" name="user_type" value="employer"> 🏢 Hire Talent
+                </label>
+            </div>
+        </div>
+        
+        <div style="display: flex; gap: 12px;">
+            <div class="input-group" style="flex:1;">
+                <label>First Name</label>
+                <input type="text" name="first_name" placeholder="First name" required>
+            </div>
+            <div class="input-group" style="flex:1;">
+                <label>Last Name</label>
+                <input type="text" name="last_name" placeholder="Last name" required>
+            </div>
+        </div>
+        
+        <div class="input-group">
+            <label>Email Address</label>
+            <input type="email" name="email" placeholder="you@email.com" required>
+        </div>
+        
+        <div class="input-group">
+            <label>Phone Number</label>
+            <input type="tel" name="phone" placeholder="+91 98765 43210" required>
+        </div>
+        
+        <div class="input-group">
+            <label>Password</label>
+            <input type="password" name="password" placeholder="At least 6 characters" minlength="6" required>
+        </div>
+        
+        <div class="input-group">
+            <label>Confirm Password</label>
+            <input type="password" name="confirm_password" placeholder="Re-enter your password" required>
+        </div>
+        
+        <div style="display: flex; gap: 12px;">
+            <div class="input-group" style="flex:1;">
+                <label>City</label>
+                <input type="text" name="city" placeholder="Mumbai" required>
+            </div>
+            <div class="input-group" style="flex:1;">
+                <label>State</label>
+                <input type="text" name="state" placeholder="Maharashtra" required>
+            </div>
+        </div>
+        
+        <div id="company_field" class="input-group" style="display:none;">
+            <label>Company Name</label>
+            <input type="text" name="company_name" placeholder="Your Company Pvt Ltd">
+        </div>
+        
+        <button type="submit" class="btn btn-coral" style="width: 100%; margin-top: 10px;">Create Account</button>
+    </form>
+    
+    <p style="text-align: center; margin-top: 20px; color: var(--ink-light);">
+        Already have an account? <a href="/login" style="color: var(--coral); font-weight: 600;">Sign in</a>
+    </p>
+</div>
+
+<script>
+    document.querySelectorAll('input[name="user_type"]').forEach(function(radio) {
+        radio.addEventListener('change', function() {
+            document.getElementById('company_field').style.display = 
+                this.value === 'employer' ? 'block' : 'none';
+        });
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Apply - {{ job.title }}{% endblock %}
+
+{% block content %}
+<div style="max-width: 700px; margin: 0 auto;">
+
+    <div class="job-card" style="border-left: 4px solid #27ae60;">
+        <h2>📝 Apply for Job</h2>
+        <h3>{{ job.title }}</h3>
+        <p>🏢 {{ job.company_name }} | 📍 {{ job.location_city }}</p>
+        <p>💰 ₹{{ "{:,.0f}".format(job.min_salary) }} - ₹{{ "{:,.0f}".format(job.max_salary) }}</p>
+    </div>
+
+    <div class="job-card">
+        <form action="/apply/{{ job.job_id }}" method="POST">
+            
+            <div style="margin-bottom: 15px;">
+                <label style="font-weight: bold;">👤 Applying as:</label>
+                <p>{{ seeker.first_name }} {{ seeker.last_name }} (Demo User)</p>
+                <p style="color: #7f8c8d; font-size: 14px;">📧 rahul.sharma@gmail.com</p>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label style="font-weight: bold;">💰 Expected Salary (Annual in ₹):</label>
+                <input type="number" name="expected_salary" 
+                       style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 4px;"
+                       value="{{ job.min_salary }}" required>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label style="font-weight: bold;">⏰ Notice Period (Days):</label>
+                <input type="number" name="notice_period" 
+                       style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 4px;"
+                       value="30" required>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label style="font-weight: bold;">📄 Cover Letter:</label>
+                <textarea name="cover_letter" rows="6" 
+                          style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 4px;"
+                          placeholder="Tell the employer why you're a great fit for this role...">Dear Hiring Manager,
+
+I am excited to apply for the {{ job.title }} position at {{ job.company_name }}. With my skills and experience, I believe I would be a valuable addition to your team.
+
+I look forward to discussing this opportunity further.
+
+Best regards,
+{{ seeker.first_name }} {{ seeker.last_name }}</textarea>
+            </div>
+
+            <button type="submit" class="btn btn-green" style="width: 100%; padding: 14px; font-size: 16px;">
+                🚀 Submit Application
+            </button>
+        </form>
+    </div>
+
+</div>
+{% endblock %}

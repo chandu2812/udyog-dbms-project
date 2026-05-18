@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Sign In · Udyog{% endblock %}
+
+{% block content %}
+
+<div class="form-card">
+    <h2>Welcome Back 👋</h2>
+    <p class="subtitle">Sign in to your Udyog account</p>
+    
+    <form action="/login" method="POST">
+        <div class="input-group">
+            <label>Email Address</label>
+            <input type="email" name="email" placeholder="you@email.com" required>
+        </div>
+        
+        <div class="input-group">
+            <label>Password</label>
+            <input type="password" name="password" placeholder="Enter your password" required>
+        </div>
+        
+        <div class="input-group">
+            <label>I am a...</label>
+            <select name="user_type">
+                <option value="job_seeker">👤 Job Seeker</option>
+                <option value="employer">🏢 Employer</option>
+                <option value="admin">🔧 Admin</option>
+            </select>
+        </div>
+        
+        <button type="submit" class="btn btn-coral" style="width: 100%; margin-top: 10px;">Sign In</button>
+    </form>
+    
+    <p style="text-align: center; margin-top: 20px; color: var(--ink-light);">
+        New to Udyog? <a href="/register" style="color: var(--coral); font-weight: 600;">Create an account</a>
+    </p>
+    
+    <div style="margin-top: 24px; padding: 16px; background: var(--gold-light); border-radius: var(--radius); font-size: 13px;">
+        <strong>🔑 Demo Credentials:</strong><br>
+        Job Seeker: rahul.sharma@gmail.com / pass123<br>
+        Employer: hr@tcs.com / pass123
+    </div>
+</div>
+
+{% endblock %}

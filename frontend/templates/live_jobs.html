@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Live Jobs · Udyog{% endblock %}
+
+{% block content %}
+
+<div class="hero" style="padding-top: 20px;">
+    <h1 style="font-size: 36px;">🌐 <span>Live Jobs</span> Feed</h1>
+    <p>Real-time jobs from across the web + Udyog listings</p>
+</div>
+
+<!-- Search Live Jobs -->
+<div class="search-box">
+    <form action="/search-live" method="GET">
+        <input type="text" name="q" placeholder="Search live jobs... Python, React, Remote..." value="{{ query or '' }}">
+        <button type="submit">🔍 Search Live</button>
+    </form>
+</div>
+
+<!-- Stats Bar -->
+<div class="stats-row" style="grid-template-columns: repeat(2, 1fr);">
+    <div class="stat-box">
+        <div class="num" style="color: var(--teal); font-size: 24px;">{{ total }}</div>
+        <div class="lbl">Jobs Found</div>
+    </div>
+    <div class="stat-box">
+        <div class="num" style="color: var(--coral); font-size: 24px;">🌐 + 🏢</div>
+        <div class="lbl">Remotive + Udyog</div>
+    </div>
+</div>
+
+<!-- Jobs List -->
+<div class="job-list">
+    {% if jobs %}
+        {% for job in jobs %}
+        <div class="job-card" style="flex-direction: column; align-items: flex-start;">
+            <div style="display: flex; justify-content: space-between; width: 100%; margin-bottom: 8px;">
+                <h3 style="margin: 0;">{{ job.title }}</h3>
+                <span class="tag tag-level" style="background: {% if job.source == 'Udyog' %}#dbeafe{% else %}#d1fae5{% endif %}; color: {% if job.source == 'Udyog' %}var(--blue){% else %}var(--green){% endif %};">
+                    {% if job.source == 'Udyog' %}🏢 Local{% else %}🌐 {{ job.source }}{% endif %}
+                </span>
+            </div>
+            
+            <div class="company-name" style="font-size: 15px; margin-bottom: 10px;">
+                🏢 {{ job.company }} · 📍 {{ job.location }}
+            </div>
+            
+            <div class="tags" style="margin-bottom: 12px;">
+                <span class="tag tag-type">💼 {{ job.type }}</span>
+                {% if job.salary %}
+                <span class="tag tag-salary">💰 {{ job.salary }}</span>
+                {% endif %}
+                {% if job.category %}
+                <span class="tag tag-location">📂 {{ job.category }}</span>
+                {% endif %}
+            </div>
+            
+            <p style="color: var(--ink-light); font-size: 14px; margin-bottom: 12px;">
+                {{ job.description }}
+            </p>
+            
+            <a href="{% if job.source == 'Udyog' %}{{ job.url }}{% else %}{{ job.url }}{% endif %}" 
+               target="_blank" 
+               class="btn btn-outline" 
+               style="align-self: flex-end;">
+                View Job →
+            </a>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div style="text-align: center; padding: 60px; color: var(--ink-light);">
+            <p style="font-size: 18px;">🔍 No jobs found. Try a different search term!</p>
+        </div>
+    {% endif %}
+</div>
+
+<br>
+<a href="/" class="btn btn-outline">← Back to Local Jobs</a>
+
+{% endblock %}

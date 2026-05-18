@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Udyog - Your Career, Our Commitment{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/" class="logo">
+            <span class="icon">उ</span>
+            Udyog
+        </a>
+    <div class="nav-links">
+    <a href="/" class="{% if request.path == '/' %}active{% endif %}">Find Jobs</a>
+    <a href="/filter" class="{% if request.path == '/filter' %}active{% endif %}">🎯 Filters</a>
+    <a href="/search" class="{% if request.path == '/search' %}active{% endif %}">Search</a>
+    <a href="/live-jobs" class="{% if request.path == '/live-jobs' %}active{% endif %}">🌐 Live</a>
+    <a href="/dashboard" class="{% if request.path == '/dashboard' %}active{% endif %}">Insights</a>
+    <a href="/login" class="{% if request.path == '/login' %}active{% endif %}">Sign In</a>
+    <a href="/register" class="btn-signup">Get Started</a>
+</div>
+    </nav>
+
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+
+    <div class="footer">
+        <p>🇮🇳 Udyog · Your Career, Our Commitment · Built with ❤️ in India</p>
+    </div>
+</body>
+</html>

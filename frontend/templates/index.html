@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Udyog - Find Your Dream Job{% endblock %}
+
+{% block content %}
+
+<div class="hero">
+    <h1>Find Your<br><span>Next Opportunity</span></h1>
+    <p>Discover jobs from India's most innovative companies. Your career journey starts here.</p>
+</div>
+
+<div class="search-box">
+    <form action="/search" method="GET" style="display: flex; width: 100%;">
+        <input type="text" name="q" placeholder="Search jobs... Java Developer, Data Scientist...">
+        <button type="submit">🔍 Search</button>
+    </form>
+</div>
+
+<div class="job-list">
+    {% if jobs %}
+        {% for job in jobs %}
+        <a href="/job/{{ job.job_id }}" style="text-decoration: none; color: inherit;">
+            <div class="job-card">
+                <div class="company-logo">{{ job.company_name[0] }}</div>
+                <div class="job-info">
+                    <h3>{{ job.title }}</h3>
+                    <div class="company-name">{{ job.company_name }} · {{ job.location_city }}</div>
+                    <div class="tags">
+                        <span class="tag tag-location">📍 {{ job.location_city }}</span>
+                        <span class="tag tag-type">💼 {{ job.job_type }}</span>
+                        {% if job.min_salary %}
+                        <span class="tag tag-salary">💰 ₹{{ "{:,.0f}".format(job.min_salary) }} - ₹{{ "{:,.0f}".format(job.max_salary) }}</span>
+                        {% endif %}
+                        <span class="tag tag-level">📊 {{ job.experience_level }}</span>
+                    </div>
+                </div>
+                <div class="arrow">→</div>
+            </div>
+        </a>
+        {% endfor %}
+    {% else %}
+        <div style="text-align: center; padding: 60px; color: var(--ink-light);">
+            <p style="font-size: 18px;">No jobs posted yet. Check back soon!</p>
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}
